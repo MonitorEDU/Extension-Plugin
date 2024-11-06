@@ -1,21 +1,25 @@
 {
-    "manifest_version": 3,
-    "name": "Monitor EDU - Extension",
-    "version": "0.0.1",
-    "description": "Extension to secure exam integrity.",
-    "icons": {
-        "16": "images/MonitorEDU_16.png",
-        "32": "images/MonitorEDU_32.png",
-        "48": "images/MonitorEDU_48.png",
-        "128": "images/MonitorEDU_128.png"
-    },
-    "content_scripts": [
-        {
-            "matches": ["https://aaafoodhandler.com/*","https://monitoredu.com/"],
-            "js": ["scripts/coverPage.js"]
-        }
-    ],
-    "permissions": [
-        "clipboardWrite"
-    ]
+  "manifest_version": 3,
+  "name": "Monitor EDU - Extension",
+  "version": "0.0.1",
+  "description": "Extension to secure exam integrity.",
+  "icons": {
+    "16": "images/MonitorEDU_16.png",
+    "32": "images/MonitorEDU_32.png",
+    "48": "images/MonitorEDU_48.png",
+    "128": "images/MonitorEDU_128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://courses.aaafoodhandler.com/*",
+        "https://monitoredu.com/",
+        "https://www.mytestcom.net/*",
+        "https://*.test.com/*",
+        "https://live.gaugeonline.com/*"
+      ],
+      "js": ["scripts/coverPage.js"]
+    }
+  ],
+  "permissions": ["clipboardWrite"]
 }
