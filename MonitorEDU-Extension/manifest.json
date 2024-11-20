@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Monitor EDU - Extension",
+  "name": "SafeTest Live by MonitorEDU",
   "version": "0.0.1",
-  "description": "Extension to secure exam integrity.",
+  "description": "Secure online exams by preventing screenshots and controlling clipboard access.",
   "icons": {
     "16": "images/MonitorEDU_16.png",
     "32": "images/MonitorEDU_32.png",
@@ -13,7 +13,6 @@
     {
       "matches": [
         "https://courses.aaafoodhandler.com/*",
-        "https://monitoredu.com/",
         "https://www.mytestcom.net/*",
         "https://*.test.com/*",
         "https://live.gaugeonline.com/*"
