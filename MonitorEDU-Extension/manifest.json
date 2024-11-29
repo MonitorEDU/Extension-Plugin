@@ -21,5 +21,9 @@
       "js": ["scripts/coverPage.js"]
     }
   ],
-  "permissions": ["clipboardWrite"]
+  "permissions": ["clipboardWrite"],
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "action": {}
 }
