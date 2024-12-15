@@ -17,7 +17,8 @@
         "https://*.test.com/*",
         "https://live.gaugeonline.com/*"
       ],
-      "js": ["scripts/coverPage.js"]
+      "js": ["scripts/coverPage.js"],
+      "css": ["css/monitoreduStyles.css"]
     }
   ],
   "permissions": ["clipboardWrite"]
