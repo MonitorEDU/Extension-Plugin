@@ -1,0 +1,19 @@
+org: sgates383
+app: monitoredu-extension
+service: monitoredu-extension-api
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage}
+  region: us-east-1
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - http:
+          path: "{proxy+}"
+          method: ANY
+          cors: true
