@@ -94,6 +94,18 @@ response
 
 ```
 
+### Patterns
+
+#### event list
+
+- tabs_event
+  - too many tabs open, max is X
+- keystroke_event
+  - X key combo pressed (meta, fn, shortcut keys)
+- focus_event
+  - exam tab lost focus, overlay is displayed
+  - exam tab regained focus, overlay is hidden
+
 ## Initialize - path: /init
 
 ### GET /init?session_code={session_code}
@@ -114,10 +126,24 @@ response
 
 ```
 
-#### TODO:
+## Status - path: /status
 
-- add type @model to proctor-app
-- add code to write to proctor-app
-- add frontend to display events
-- add frontend to generate session code
-- determine exam settings schema
+### GET /status?session_code={session_code}
+
+status and init are the same for now.
+
+session_code given by proctor
+
+response
+
+```
+{
+  session_settings: {
+    exam_url: "exam_url",
+    max_tabs: Number,
+    ...rest
+  },
+  ...rest
+}
+
+```
