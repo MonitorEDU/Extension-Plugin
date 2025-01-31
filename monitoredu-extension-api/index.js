@@ -12,6 +12,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type");
+  console.log(req);
   next();
 });
 
@@ -54,7 +55,13 @@ app.route("/init").get((req, res) => {
   GQLPoster(GetSessionQuery, { session_code })
     .then((response) => {
       console.log(response);
-      res.status(200).json(response.data.getExtensionSession);
+      if (response.data.getExtensionSession === null) {
+        return res.status(404).json({
+          error: "Session not found for session_code: " + session_code,
+        });
+      } else {
+        res.status(200).json(response.data.getExtensionSession);
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -71,7 +78,13 @@ app.route("/status").get((req, res) => {
   GQLPoster(GetSessionQuery, { session_code })
     .then((response) => {
       console.log(response);
-      res.status(200).json(response.data.getExtensionSession);
+      if (response.data.getExtensionSession === null) {
+        return res.status(404).json({
+          error: "Session not found for session_code: " + session_code,
+        });
+      } else {
+        res.status(200).json(response.data.getExtensionSession);
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -126,6 +139,7 @@ const GetSessionQuery = `
       exam_url
       max_tabs
       keep_alive_interval
+      maximum_duration
     }
   }
 `;
