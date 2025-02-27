@@ -1,10 +1,14 @@
 const serverless = require("serverless-http");
 const express = require("express");
+const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 const app = express();
 const bodyParser = require("body-parser");
 const { default: axios } = require("axios");
 const endpoint = process.env.GQL_ENDPOINT;
 const key = process.env.GQL_API_KEY;
+
+const sqs = new SQSClient({ region: process.env.AWS_REGION });
+const queueUrl = process.env.SQS_QUEUE_URL;
 
 app.use(bodyParser.json());
 // ensure responses have headers that allow CORS
@@ -20,25 +24,20 @@ app.route("/events").post(async (req, res) => {
   console.log(req.body);
   const { session_code, event, event_description, event_timestamp } = req.body;
   try {
-    // get session first
-    const session = await GQLPoster(FetchEventsToUpdateQuery, { session_code });
-    console.log(session);
-    const response = await GQLPoster(UpdateEventQuery, {
-      input: {
+    const params = {
+      MessageBody: JSON.stringify({
         session_code,
-        events: [
-          ...session.data.getExtensionSession.events,
-          {
-            event: event,
-            event_description: event_description,
-            event_timestamp: new Date(event_timestamp).toISOString(),
-          },
-        ],
-      },
-    });
+        event,
+        event_description,
+        event_timestamp,
+      }),
+      QueueUrl: queueUrl,
+      MessageGroupId: session_code, // For FIFO queues
+      MessageDeduplicationId: `${session_code}-${Date.now()}`, // Unique ID for each message
+    };
 
-    console.log(response);
-    res.status(200).json({ message: "Event added successfully" });
+    await sqs.send(new SendMessageCommand(params));
+    res.status(200).json({ message: "Event queued successfully" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal Server Error" });

@@ -3,20 +3,69 @@ app: monitoredu-extension
 service: monitoredu-extension-api
 frameworkVersion: "3"
 
+package:
+  individually: true
+  patterns:
+    - "!**"
+    - "!node_modules/**"
+
 provider:
   name: aws
   runtime: nodejs18.x
   stage: ${opt:stage}
   region: us-east-1
+  environment:
+    SQS_QUEUE_URL: !Ref EventsQueue
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+            - sqs:GetQueueUrl
+          Resource: !GetAtt EventsQueue.Arn
+        - Effect: Allow
+          Action:
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+            - sqs:GetQueueAttributes
+          Resource: !GetAtt EventsQueue.Arn
 
 functions:
   api:
-    handler: index.handler
+    handler: src/api/index.handler
     events:
       - http:
           path: "{proxy+}"
           method: ANY
           cors: true
+    package:
+      patterns:
+        - "src/api/**"
+        - "src/api/package.json"
+        - "src/api/node_modules/**"
+
+  eventProcessor:
+    handler: src/event-processor/index.handler
+    events:
+      - sqs:
+          arn: !GetAtt EventsQueue.Arn
+          batchSize: 1
+    package:
+      patterns:
+        - "src/event-processor/**"
+        - "src/event-processor/package.json"
+        - "src/event-processor/node_modules/**"
+
+resources:
+  Resources:
+    EventsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-events-${self:provider.stage}.fifo
+        FifoQueue: true
+        ContentBasedDeduplication: false
+        VisibilityTimeout: 60
 
 plugins:
   - serverless-dotenv-plugin
