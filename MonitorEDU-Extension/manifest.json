@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SafeTest Live by MonitorEDU",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Secure online exams by preventing screenshots and controlling clipboard access.",
   "icons": {
     "16": "images/MonitorEDU_16.png",
@@ -11,14 +11,17 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://courses.aaafoodhandler.com/*",
-        "https://www.mytestcom.net/*",
-        "https://*.test.com/*",
-        "https://live.gaugeonline.com/*"
-      ],
-      "js": ["scripts/coverPage.js"]
+      "matches": ["<all_urls>"],
+      "js": ["scripts/common.js","scripts/coverPage.js","scripts/keylogger.js"],
+      "css": ["css/monitoreduStyles.css"]
     }
   ],
-  "permissions": ["clipboardWrite"]
+  "permissions": ["clipboardWrite","storage","tabs"],
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "action": {
+    "default_title": "Click to enter Code",
+    "default_popup": "popup.html"
+  }
 }
